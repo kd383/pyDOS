@@ -5,6 +5,7 @@ symmetric matrix.
 
 8/6/2016 - Created
 8/16/2016 - Commented
+11/28/2016 - Tested
 """
 
 import numpy as np
@@ -70,4 +71,5 @@ def eig_rand1(Z,AZ,thresh=1e-8):
 
 	return V,D
 
-
+if __name__ == '__main__':
+	pass

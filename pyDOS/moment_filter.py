@@ -4,6 +4,7 @@ This module is a colletion of functions that apply filters on Chebyshev moments
 
 8/8/2016 - Created
 8/16/2016 - Commented
+11/28/2016 - Tested
 """
 
 import numpy as np
@@ -47,3 +48,6 @@ def filter_lorentz(c,beta=4.0):
 	g.shape = (N,1)
 	c = g*c
 	return c
+
+if __name__ == '__main__':
+	pass

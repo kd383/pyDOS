@@ -4,6 +4,8 @@ This module is a colletion of functions that generates matrix functions
 
 8/1/2016 - Created
 8/16/2016 - Commented
+11/25/2016 - Tested
+11/28/2016 - Fix type casting
 """
 
 import numpy as np
@@ -30,10 +32,10 @@ def mfunc_laplacian(W):
 		Wfun = lambda x: W*x
 
 	e = np.ones(n)
-	d = ss.csr_matrix(Wfun(e)).transpose()
+	d = Wfun(e).reshape([n,-1])
 
 	# L= D-A
-	Lfun = lambda x: d.multiply(x)-Wfun(x)
+	Lfun = lambda x: (np.multiply(x.reshape([n,-1]),d)-Wfun(x.reshape([n,-1]))).reshape(x.shape)
 	return Lfun
 
 def mfunc_modularity(W):
@@ -57,14 +59,14 @@ def mfunc_modularity(W):
 		Wfun = lambda x: W*x
 
 	e = np.ones(n)
-	d = ss.csr_matrix(Wfun(e))
+	d = Wfun(e).reshape([-1,n])
 	s = d.sum()
 
 	# B = A-d*d'/s
-	Bfun = lambda x: Wfun(x)-(d.transpose()/s)*(d*x)
+	Bfun = lambda x: (Wfun(x.reshape([n,-1]))-(d.transpose()/s)*(d.dot(x))).reshape(x.shape)
 	return Bfun
 
-def mfunc_normalize(W,mode='s'):
+def mfunc_normalize(W, mode='s'):
 	"""
 	Convert a weighted adjacency matrix function into a normalized adjacency 
 	operator
@@ -91,18 +93,18 @@ def mfunc_normalize(W,mode='s'):
 
 	# Calculate the degree of nodes
 	e = np.ones(n)
-	d = ss.csr_matrix(Wfun(e)).transpose()
+	d = Wfun(e).reshape([n,-1])
 
 	# Normalize by the desire style
 	if mode =='s':
-		d.data = 1/np.sqrt(d.data)
-		Nfun = lambda x: d.multiply(Wfun(d.multiply(x)))
+		d = 1/np.sqrt(d)
+		Nfun = lambda x: np.multiply(Wfun(np.multiply(x.reshape([n,-1]),d)),d).reshape(x.shape)
 	elif mode == 'r':
-		d.data = 1/d.data
-		Nfun = lambda x: d.multiply(Wfun(x))
+		d = 1/d
+		Nfun = lambda x: np.multiply(Wfun(x.reshape([n,-1])),d).reshape(x.shape)
 	elif mode == 'c':
-		d.data = 1/d.data
-		Nfun = lambda x: Wfun(d.multiply(x))
+		d = 1/d
+		Nfun = lambda x: Wfun(np.multiply(x.reshape([n,-1]),d)).reshape(x.shape)
 	else:
 		raise ValueError('Unknown mode!')
 
@@ -130,13 +132,13 @@ def mfunc_slaplacian(W):
 		Wfun = lambda x: W*x
 
 	e = np.ones(n)
-	d = ss.csr_matrix(Wfun(e)).transpose()
+	d = Wfun(e).reshape([n,-1])
 
 	# L = D+A
-	Lfun = lambda x: d.multiply(x)+Wfun(x)
+	Lfun = lambda x: (np.multiply(x.reshape([n,-1]),d)+Wfun(x.reshape([n,-1]))).reshape(x.shape)
 	return Lfun
 
-def mfunc_cheb_poly(coeff,W):
+def mfunc_cheb_poly(coeff, W):
 	"""
 	Construct the operator to evaluate the Chebyshev series for given matrix W
 	and a vector of coefficients.
@@ -167,7 +169,7 @@ def mfunc_cheb_poly(coeff,W):
 	return pWfun
 	
 
-def mfunc_cheb_poly_apply(coeff,Wfun,x):
+def mfunc_cheb_poly_apply(coeff, Wfun, x):
 	"""
 	Auxiliary function for mfunc_cheb_poly_apply
 	See description above
@@ -179,11 +181,14 @@ def mfunc_cheb_poly_apply(coeff,Wfun,x):
 
 	# Apply recurrecne relation of Chebyshev polynomials
 	for j in range(1,len(coeff)-1):
-		y = coeff[j]*P0
+		y = y + coeff[j]*P0
 		Pn = 2*Wfun(P0)-Pm
 		Pm = P0
 		P0 = Pn
 
 	y = y+coeff[-1]*P0
 	return y
+
+	if __name__ == '__main__':
+		pass
 	

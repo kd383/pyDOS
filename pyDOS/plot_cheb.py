@@ -30,7 +30,7 @@ def plot_cheb_argparse(npts,c,xx0=-1,ab=np.array([1,0])):
 		ab: Scaling map parameters
 	"""
 
-	if isinstance(xx0,int) and xx0==-1:
+	if isinstance(xx0,int):
 		# only c is given
 		xx0 = np.linspace(-1+1e-8,1-1e-8,npts)
 		xx = xx0
@@ -90,8 +90,13 @@ def plot_cheb(varargin,pflag=True):
 	# Plot by default
 	if pflag:
 		plt.plot(xx0,yy)
+		plt.ion()
 		plt.show()
+		plt.pause(1)
+		plt.clf()
+		# input('Press [enter] to continue.')
 
+	yy.reshape([1,-1])
 	return yy
 
 def plot_cheb_ldos(varargin,pflag=True):
@@ -135,8 +140,12 @@ def plot_cheb_ldos(varargin,pflag=True):
 		xr = np.array([xx0[0]+xx0[1],xx0[-1]+xx0[-2]],dtype='float')/2
 		im = ax.imshow(yy[index,:],extent=np.append(xr,yr),aspect=1.5/nnodes)
 		fig.colorbar(im)
+		plt.ion()
 		plt.show()
+		plt.pause(1)
+		plt.clf()
 
+	index = np.float64(index.reshape([-1,1]))
 	return yy,index
 
 def plot_chebhist(varargin,pflag=True):
@@ -167,7 +176,10 @@ def plot_chebhist(varargin,pflag=True):
 	# Plot by default
 	if pflag:
 		plt.bar(xm,yy,align='center',width=0.1)
+		plt.ion()
 		plt.show()
+		plt.pause(1)
+		plt.clf()
 
 	return yy
 
@@ -202,7 +214,10 @@ def plot_chebint(varargin,pflag=True):
 	# Plot by default
 	if pflag:
 		plt.plot(xx0,yy)
+		plt.ion()
 		plt.show()
+		plt.pause(1)
+		plt.clf()
 
 	return yy
 
@@ -239,6 +254,12 @@ def plot_chebp(varargin,pflag=True):
 	# Plot by default
 	if pflag:
 		plt.plot(xx0,yy)
+		plt.ion()
 		plt.show()
+		plt.pause(1)
+		plt.clf()
 
 	return yy
+
+if __name__ == '__main__':
+	pass

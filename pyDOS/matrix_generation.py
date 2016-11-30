@@ -4,9 +4,12 @@ This module is a colletion of functions that generates different matrices for gr
 
 8/1/2016 - Created
 8/16/2016 - Commented
+11/25/2016 - Tested
+11/29/2016 - Fix bug: deepcopy
 """
 
 import numpy as np
+import copy as cp
 import scipy.sparse as ss
 
 def matrix_adjacency(W,keep_diag=1):
@@ -52,17 +55,18 @@ def matrix_laplacian(W,mode='r'):
 
 	# Strip diagonal
 	z = np.zeros(W.shape[0])
-	W.setdiag(z,0)
+	L = cp.deepcopy(W)
+	L.setdiag(z,0)
 
 	# Compute row or column sums
 	if mode == 'r':
-		d = W.sum(1)
+		d = np.asarray(L.sum(1))
 	else:
-		d = W.sum(0)
+		d = np.asarray(L.sum(0))
 
 	# Replace the main diagonal, flip off-diagonal signs
-	L = -W
-	L.setdiag(d,0)
+	L = -L
+	L.setdiag(d.squeeze(),0)
 	return L
 
 def matrix_normalize(W,mode='s'):
@@ -114,17 +118,22 @@ def matrix_slaplacian(W,mode='r'):
 
 	# Strip diagonal
 	z = np.zeros(W.shape[0])
-	W.setdiag(z,0)
+	L = cp.deepcopy(W)
+	L.setdiag(z,0)
 
 	# Compute row or column sums
 	if mode == 'r':
-		d = W.sum(1)
+		d = np.asarray(L.sum(1))
 	else:
-		d = W.sum(0)
+		d = np.asarray(L.sum(0))
 
 	# Replace main diagonal
-	L = W
-	L.setdiag(d,0)
+	
+	L.setdiag(d.squeeze(),0)
 	return L	
+
+
+if __name__ == '__main__':
+	pass
 
 

@@ -4,6 +4,7 @@ This module is a function to load graph matrix from Matlab file
 
 8/1/2016 - Created
 8/16/2016 - Commented
+11/25/2016 - Tested
 """
 
 import scipy.io as sio

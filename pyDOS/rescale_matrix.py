@@ -5,6 +5,7 @@ the eigenvalue range between -1 and 1.
 
 8/3/2016 - Created
 8/16/2016 - Commented
+11/28/2016 - Tested
 """
 
 import numpy as np
@@ -38,10 +39,10 @@ def rescale_matrix(H,range=0.01):
 
 	# Compute range if not given
 	if not range:
-		range = ssla.eigs(ssla.LinearOperator((n,n),H),1,which='SR',
+		range = ssla.eigsh(H,1,which='SA',
 				return_eigenvectors=False)
-		range = np.append(range,ssla.eigs(ssla.LinearOperator((n,n),H),1,
-				which='LR',return_eigenvectors=False))
+		range = np.append(range,ssla.eigsh(H,1,
+				which='LA',return_eigenvectors=False))
 
 	# Form dense or sparse identity, as appropraite
 	if ss.issparse(H):
@@ -52,7 +53,7 @@ def rescale_matrix(H,range=0.01):
 	# Parameters for linear mapping
 	ab = [(range[1]-range[0])/(2-fudge),(range[1]+range[0])/2]
 	H = (H-ab[1]*I)/ab[0]
-
+	ab = np.asarray(ab).reshape([2,-1])
 	return H,ab
 
 def rescale_mfunc(H,n=0.01,range=0.01):
@@ -84,10 +85,10 @@ def rescale_mfunc(H,n=0.01,range=0.01):
 
 		# Lanczos to estimate range if not given
 		if not range:
-			range = ssla.eigs(ssla.LinearOperator((n,n),H),1,which='SR',
+			range = ssla.eigsh(ssla.LinearOperator((n,n),H,dtype='float64'),1,which='SA',
 				return_eigenvectors=False)
-			range = np.append(range,ssla.eigs(ssla.LinearOperator((n,n),H),1,
-				which='LR',return_eigenvectors=False))
+			range = np.append(range,ssla.eigsh(ssla.LinearOperator((n,n),H,dtype='float64'),1,
+				which='LA',return_eigenvectors=False))
 
 		# Parameters for lienar mapping
 		ab = [(range[1]-range[0])/(2-fudge),(range[1]+range[0])/2]
@@ -101,4 +102,8 @@ def rescale_mfunc(H,n=0.01,range=0.01):
 		H,ab = rescale_matrix(H,range)
 		Hfun = lambda x: H*x
 
+	ab = np.asarray(ab).reshape([2,-1])
 	return Hfun,ab
+
+if __name__ == '__main__':
+	pass

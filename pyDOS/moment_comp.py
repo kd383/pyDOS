@@ -96,13 +96,15 @@ def moments_cheb_dos(A,n,nZ=100,N=10,kind=1):
 		Z = nZ
 		nZ = Z.shape[1]
 	else:
-		Z = nr.randn(n,nZ)
+		Z = np.sign(nr.randn(n,nZ))
 
 	# Estimate moments for each probe vector
 	cZ = moments_cheb(Afun,Z,N,kind)
 	c = np.mean(cZ,1)
 	cs = np.std(cZ,1,ddof=1)/np.sqrt(nZ)
 
+	c = c.reshape([N,-1])
+	cs = cs.reshape([N,-1])
 	return c,cs
 
 def moments_cheb_ldos(A,n,nZ=100,N=10,kind=1):
@@ -142,7 +144,7 @@ def moments_cheb_ldos(A,n,nZ=100,N=10,kind=1):
 		Z = nZ
 		nZ = Z.shape[1]
 	else:
-		Z = nr.randn(n,nZ)
+		Z = np.sign(nr.randn(n,nZ))
 
 	# Run three-term recurrence to estimate moments.
 	# Use the stochastic diagonal estimator of Bekas and Saad
@@ -171,9 +173,11 @@ def moments_cheb_ldos(A,n,nZ=100,N=10,kind=1):
 
 	cs = cs/np.sqrt(nZ)
 
+	c = c.reshape([N,-1])
+	cs = cs.reshape([N,-1])
 	return c,cs
 
-def moment_delta(x,N):
+def moments_delta(x,N):
 	"""
 	Compute Chebyshev moment 0 through N-1 of a delta distribution centered 
 	at x.
@@ -186,5 +190,9 @@ def moment_delta(x,N):
 		c: a column vector of N Chebyshev moments
 	"""
 
-	c = np.real(np.cos(np.linspace(0,N-1,N)*np.arccos(np.complex_(x))))
+	c = np.sum(np.real(np.cos(np.linspace(0,N-1,N)*np.arccos(np.complex_(x)))),0)
+	c = c.reshape([N,-1])
 	return c
+
+if __name__ == '__main__':
+	pass
