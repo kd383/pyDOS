@@ -1,4 +1,4 @@
-#usr/bin/env python
+#!/usr/bin/env python
 import sys
 from os.path import dirname,realpath
 sys.path.insert(0,dirname(realpath(__file__))[:-11])

@@ -1,4 +1,4 @@
-#!usr/bin/env python
+#!/usr/bin/env python
 """
 This module is a function to load graph matrix from Matlab file
 

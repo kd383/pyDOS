@@ -1,4 +1,4 @@
-#usr/bin/env python
+#!/usr/bin/env python
 """
 This is a test function for rescale_matrix module
 

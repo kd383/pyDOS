@@ -1,4 +1,4 @@
-#!usr/bin/env python
+#!/usr/bin/env python
 """
 This module is a colletion of functions that generates matrix functions
 

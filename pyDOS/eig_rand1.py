@@ -1,4 +1,4 @@
-#usr/bin/env python
+#!/usr/bin/env python
 """
 This module is a function to approximate eigenpairs of approximately low-rank 
 symmetric matrix.

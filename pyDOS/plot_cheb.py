@@ -1,4 +1,4 @@
-#usr/bin/env python
+#!/usr/bin/env python
 """
 This module is a collection of functions used to make plots associated with 
 Chebyshev moments

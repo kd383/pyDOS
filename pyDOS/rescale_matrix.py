@@ -1,4 +1,4 @@
-#!usr/bin/env python
+#!/usr/bin/env python
 """
 This module is a colletion of functions that rescale the symmetrix matrix H so 
 the eigenvalue range between -1 and 1. 
